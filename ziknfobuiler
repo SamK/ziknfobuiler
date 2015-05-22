@@ -178,6 +178,12 @@ class Nfo(object):
 
         # sort tracks
         self.tracks.sort(key=lambda k: int(k['Track_name_Position']))
+
+        # sanity check
+        if len(self.tracks) == 0:
+            logging.critical('No media file found!')
+            sys.exit(1)
+
         # Assign album properties to album
         self.properties = self.tracks[0]
 
