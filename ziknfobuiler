@@ -162,7 +162,6 @@ class Nfo(object):
             if 'Track_name_Position' not in track:
                 logger.critical('Missing track number for file {0}'.
                                 format(track['Complete_name']))
-                pass
 
             # Only accept supported formats
             if 'Format' in track and track['Format'] in self.formats:
