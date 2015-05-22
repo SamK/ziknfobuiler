@@ -4,9 +4,9 @@ Create NFO file for music album with Python 2.7 on Linux.
 
 ## Templates
 
-Zik NFO Builder has multiple templates support:
+Zik NFO Builder supports the following template engines:
 
-* BeautifulSoup 4 -- `pip install beautifulsoup4; apt-get install python-lxml`
+* Cheetah
 * Mako
 * Jinja2
 
