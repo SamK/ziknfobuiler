@@ -230,6 +230,11 @@ def main():
 
     logger.debug('Enabling debug mode.')
 
+    # If user provided a folder (not a file), it must not be empty
+    if os.path.isdir(args.folder) and not os.listdir(args.folder):
+        logger.critical("Provided folder is empty.")
+        sys.exit(1)
+
     xmldata = subprocess.check_output(["mediainfo",
                                        "--output=XML",
                                        args.folder])
