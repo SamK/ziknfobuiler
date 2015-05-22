@@ -17,7 +17,8 @@ Simple examples are stored in the `/templates` directory.
 * Install Beautiful Soup 4
 
 ```
-sudo pip install beautifulsoup4 python-lxml
+sudo pip install beautifulsoup4 
+sudo apt-get install python-lxml
 ```
 
 * Clone the current repository
