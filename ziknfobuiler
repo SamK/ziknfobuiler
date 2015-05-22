@@ -1,0 +1,255 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import subprocess
+import argparse
+import os.path
+from bs4 import BeautifulSoup
+import pprint
+import logging
+import sys
+
+__version__ = '1.0.0'
+__author__ = 'SamK'
+
+__template_engine__ = 'jinja2'
+__template__ = '''{{album.Performer}} - {{album.Album}}
+===
+Artist: {{album.Performer}}
+Album:  {{album.Album}}
+Genre:  {{album.Genre}}
+Date:   {{album.Recorded_date}}
+
+Tracklist:
+{% for track in tracklist -%}
+{{ '%2s' % track.Track_name_Position }}. {{ track.Track_name
+}} ({{ track.Duration }})
+{% endfor -%}
+'''
+
+logger = logging.getLogger()
+log_console = logging.StreamHandler()
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(levelname)s - %(message)s')
+log_console.setFormatter(formatter)
+logger.addHandler(log_console)
+
+
+class NfoTemplate(object):
+    template_engine = __template_engine__
+    template = None
+    engines = ['jinja2', 'mako', 'string']
+
+    def __init__(self, template_str=None):
+        self.template_str = template_str
+        pass
+
+    def render_jinja2(self, albumdata):
+        import jinja2
+        self.template = jinja2.Template(self.template_str)
+        return self.template.render(tracklist=albumdata['tracklist'],
+                                    album=albumdata['album'])
+
+    def render_mako(self, albumdata):
+        import mako.template
+        self.template = mako.template.Template(self.template_str)
+        return self.template.render(tracklist=albumdata['tracklist'],
+                                    album=albumdata['album'])
+
+    def render_cheetah(self, albumdata):
+        from Cheetah.Template import Template
+        t = Template(self.template_str)
+        t.tracklist = albumdata['tracklist']
+        t.album = albumdata['album']
+        return str(t)
+
+    def detect_engine(self, filename):
+        if filename:
+            extension = os.path.splitext(filename)[1][1:]
+            self.template_engine = extension
+
+    def render(self, tracklist, album):
+        method_name = 'render_' + self.template_engine
+        try:
+            logger.info('About to render with engine "{}".'.
+                        format(self.template_engine))
+            method = getattr(self, method_name)
+        except AttributeError:
+            logger.critical('Unknown template engine "{}".'.
+                            format(self.template_engine))
+            sys.exit(1)
+        else:
+            albumdata = {'tracklist': tracklist, 'album': album}
+            try:
+                return method(albumdata)
+            except:
+                logger.critical("Something failed with the \
+                                template rendering...")
+                raise
+
+
+class Nfo(object):
+    tracks = []
+    properties = {}
+    formats = ['MP3', 'FLAC', 'MPEG Audio']
+    template = None
+
+    def __init__(self):
+        pass
+
+    def __str__(self):
+        """
+        Performer
+        Album
+        Bit_depth
+        Complete_name
+        Format
+        Format_Info
+        File_size
+        Duration
+        Overall_bit_rate_mode
+        Overall_bit_rate
+        Album
+        Track_name
+        Track_name_Position
+        Performer
+        Genre
+        Recorded_date
+        Format
+        Format_Info
+        Duration
+        Bit_rate_mode
+        Bit_rate
+        Channel_s_
+        Sampling_rate
+        Bit_depth
+        Stream_size
+        Writing_library
+        """
+        # Choose the template file
+        template_str = __template__
+        if self.template:
+            # User specified a specific template
+            txt = open(self.template)
+            template_str = txt.read()
+        template = NfoTemplate(template_str)
+
+        template.detect_engine(self.template)
+
+        logger.debug("Using template engine {}".
+                     format(template.template_engine))
+
+        # render template and return result
+        return template.render(
+            tracklist=self.tracks,
+            album=self.properties
+            )
+
+    def load_template(self, template_str):
+        self.template = template_str
+
+    def parse(self, xmldata):
+        soup = BeautifulSoup(xmldata, 'xml')
+
+        # Loop over "<File>"
+        for tag_file in soup.find_all('File'):
+            track = {}
+
+            # Gather all the properties of the track
+            for tag_properties in tag_file.find_all(True):
+                track[tag_properties.name] = tag_properties.contents[0]
+
+            # Exit fatally if important tags are missing
+            if 'Track_name_Position' not in track:
+                logger.critical('Missing track number for file {0}'.
+                                format(track['Complete_name']))
+                pass
+
+            # Only accept supported formats
+            if 'Format' in track and track['Format'] in self.formats:
+                # Position is a number
+                self.tracks.append(track)
+            else:
+                if 'Format' not in track:
+                    track['Format'] = 'non media'
+                logging.info('Skipping {ftype} file "{filename}"'.
+                             format(ftype=track['Format'],
+                                    filename=track['Complete_name']))
+                pass
+
+        # sort tracks
+        self.tracks.sort(key=lambda k: int(k['Track_name_Position']))
+        # Assign album properties to album
+        self.properties = self.tracks[0]
+
+
+def _pprint(stuff):
+    pprint.pprint(stuff)
+
+
+def parse_arguments():
+    global __author__
+    global __version__
+
+    engines = ', '.join(NfoTemplate().engines)
+    version_string = "%(prog)s-%(version)s by %(author)s" % \
+        {"prog": "%(prog)s", "version": __version__, "author": __author__}
+
+    parser = argparse.ArgumentParser(description="Build a nice nfo")
+    parser.add_argument('-p', '--properties', action='store_true')
+    parser.add_argument('-t', '--template', nargs=1,
+                        help="Select a template file. Supported engines: {}".
+                        format(engines))
+    parser.add_argument('-o', '--outfile',
+                        help="Output file (default: stdout)")
+    parser.add_argument('-f', '--formats', nargs='*',
+                        help='Support additional formats')
+    parser.add_argument('-V', '--version', action='version',
+                        help="shows program version", version=version_string)
+    parser.add_argument('-v', '--verbose', action='count', default=0)
+    parser.add_argument('folder')
+    return parser.parse_args()
+
+
+def main():
+    args = parse_arguments()
+    global logger
+
+    # Set logger level
+    if args.verbose == 0:
+        logger.setLevel(logging.WARNING)
+    elif args.verbose == 1:
+        logger.setLevel(logging.INFO)
+    elif args.verbose >= 2:
+        logger.setLevel(logging.DEBUG)
+
+    logger.debug('Enabling debug mode.')
+
+    xmldata = subprocess.check_output(["mediainfo",
+                                       "--output=XML",
+                                       args.folder])
+    nfo = Nfo()
+
+    if args.formats:
+        nfo.formats += args.formats
+
+    if args.template:
+        # User has a custom template
+        nfo.load_template(args.template[0])
+
+    nfo.parse(xmldata)
+
+    if args.properties:
+        # User just wants to print properties
+        for key, value in nfo.properties.iteritems():
+            print key
+    else:
+        if args.outfile:
+            f = open(args.outfile, 'w')
+            f.write(str(nfo))
+            f.close()
+        else:
+            sys.stdout.write(str(nfo))
+    logger.info('nfo file generated')
+
+if __name__ == '__main__':
+    main()
