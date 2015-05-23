@@ -2,15 +2,11 @@
 
 Create NFO file for music album with Python 2.7 on Linux.
 
-## Templates
-
-Zik NFO Builder supports the following template engines:
-
-* Cheetah
-* Mako
-* Jinja2
-
-Simple examples are stored in the `/templates` directory.
+* this program is one file
+* supports the following template engines:
+  * Cheetah
+  * Mako
+  * Jinja2
 
 ## Installation
 
