@@ -221,6 +221,8 @@ def main():
 
     xmldata = subprocess.check_output(["mediainfo",
                                        "--output=XML",
+                                       "--Full",
+                                       "--Language=raw",
                                        args.folder])
     nfo = Nfo()
 
