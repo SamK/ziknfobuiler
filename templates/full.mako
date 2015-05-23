@@ -31,10 +31,11 @@ Tracklist:
 ${hline()}
 % for track in tracklist:
 ${ '%2s' % track['Track_name_Position']}. \
-${ track['Track_name'].ljust(album['track_name_maxlen']+3, '.') }\
+${ track['Track_name'].ljust(album['track_name_maxlen']+3, ' ') }\
 (${track['Duration']})
 % endfor
 ${hline()}
+
 ## http://www.cyberciti.biz/faq/howto-get-current-date-time-in-python/
 <%! from time import strftime as time %>\
-Generated: ${"%x %X" | time} with by Zik Nfo Builder
+:: Generated on ${"%x %X" | time} with Zik Nfo Builder ::
