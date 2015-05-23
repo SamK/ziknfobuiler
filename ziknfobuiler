@@ -90,7 +90,6 @@ class NfoTemplate(object):
 class Nfo(object):
     tracks = []
     properties = {}
-    formats = ['MP3', 'FLAC', 'MPEG Audio']
     template = None
 
     def __init__(self):
@@ -158,23 +157,30 @@ class Nfo(object):
             for tag_properties in tag_file.find_all(True):
                 track[tag_properties.name] = tag_properties.contents[0]
 
+            # <File> must contain <track type="Audio">
+            # otherwise, skip it
+            tag_file.find_all('track')
+            found = False
+            for tag_track in tag_file.find_all('track'):
+                if 'Audio' in tag_track.get('type'):
+                    found = True
+
+            if not found:
+                # the file has no "Audio" property there for not considered as an
+                # audio file: forget the gathering, skip everything and
+                # continue the loop with another file
+                logging.info('Skipping not Audio file "{filename}"'.
+                             format(filename=track['Complete_name']))
+                continue
+
             # Exit fatally if important tags are missing
             if 'Track_name_Position' not in track:
                 logger.critical('Missing track number for file {0}'.
                                 format(track['Complete_name']))
-                pass
+                sys.exit(1)
 
-            # Only accept supported formats
-            if 'Format' in track and track['Format'] in self.formats:
-                # Position is a number
-                self.tracks.append(track)
-            else:
-                if 'Format' not in track:
-                    track['Format'] = 'non media'
-                logging.info('Skipping {ftype} file "{filename}"'.
-                             format(ftype=track['Format'],
-                                    filename=track['Complete_name']))
-                pass
+            # finally, add the track to the list of tracks
+            self.tracks.append(track)
 
         # sort tracks
         self.tracks.sort(key=lambda k: int(k['Track_name_Position']))
@@ -207,8 +213,6 @@ def parse_arguments():
                         format(engines))
     parser.add_argument('-o', '--outfile',
                         help="Output file (default: stdout)")
-    parser.add_argument('-f', '--formats', nargs='*',
-                        help='Support additional formats')
     parser.add_argument('-V', '--version', action='version',
                         help="shows program version", version=version_string)
     parser.add_argument('-v', '--verbose', action='count', default=0)
@@ -239,9 +243,6 @@ def main():
                                        "--output=XML",
                                        args.folder])
     nfo = Nfo()
-
-    if args.formats:
-        nfo.formats += args.formats
 
     if args.template:
         # User has a custom template
