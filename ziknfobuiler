@@ -158,6 +158,22 @@ class Nfo(object):
             for tag_properties in tag_file.find_all(True):
                 track[tag_properties.name] = tag_properties.contents[0]
 
+            # <File> must contain <track type="Audio">
+            # otherwise, skip it
+            tag_file.find_all('track')
+            found = False
+            for tag_track in tag_file.find_all('track'):
+                if 'Audio' in tag_track.get('type'):
+                    found = True
+
+            if not found:
+                # the file has no "Audio" property there for not considered as an
+                # audio file: forget the gathering, skip everything and
+                # continue the loop with another file
+                logging.info('Skipping not Audio file "{filename}"'.
+                             format(filename=track['Complete_name']))
+                continue
+
             # Exit fatally if important tags are missing
             if 'Track_name_Position' not in track:
                 logger.critical('Missing track number for file {0}'.
