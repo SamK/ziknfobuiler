@@ -24,7 +24,7 @@ ${hline()}
 Artist:   ${album['Performer']}
 Album:    ${album['Album']}
 Genre:    ${album['Genre']}
-Date:     ${album['Recorded_date']}
+Date:     ${album['Recorded_Date']}
 Codec:    ${album['Format_Info']} (${album['Format']})
 Ripper:   ${album['Writing_library']}
 Channels: ${album['Channel_s_']} / ${album['Sampling_rate']} / ${album['Bit_depth']}
