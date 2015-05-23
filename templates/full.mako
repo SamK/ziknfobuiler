@@ -1,12 +1,12 @@
 ##
 ## Variables
 ##
-<% pagewidth = 60 %>
-<% title = album['Performer'] + ' - ' + album['Album'] %>
+<% pagewidth = 60 %>\
+<% title = album['Performer'] + ' - ' + album['Album'] %>\
 ##
 ## Functions
 ##
-<%def name="hline()">${'=' * pagewidth}</%def>\
+<%def name="hline()">${'-' * pagewidth}</%def>\
 ##
 ## Expression filterings
 ## http://docs.makotemplates.org/en/latest/filtering.html
@@ -14,7 +14,7 @@
 <%!
     def center(word):
         return str.center(str(word), 60, ' ')
-%>
+%>\
 ##
 ## THE template
 ##
