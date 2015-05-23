@@ -90,7 +90,6 @@ class NfoTemplate(object):
 class Nfo(object):
     tracks = []
     properties = {}
-    formats = ['MP3', 'FLAC', 'MPEG Audio']
     template = None
 
     def __init__(self):
@@ -180,17 +179,8 @@ class Nfo(object):
                                 format(track['Complete_name']))
                 sys.exit(1)
 
-            # Only accept supported formats
-            if 'Format' in track and track['Format'] in self.formats:
-                # Position is a number
-                self.tracks.append(track)
-            else:
-                if 'Format' not in track:
-                    track['Format'] = 'non media'
-                logging.info('Skipping {ftype} file "{filename}"'.
-                             format(ftype=track['Format'],
-                                    filename=track['Complete_name']))
-                pass
+            # finally, add the track to the list of tracks
+            self.tracks.append(track)
 
         # sort tracks
         self.tracks.sort(key=lambda k: int(k['Track_name_Position']))
