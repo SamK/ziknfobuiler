@@ -37,7 +37,7 @@ logger.addHandler(log_console)
 class NfoTemplate(object):
     template_engine = __template_engine__
     template = None
-    engines = ['jinja2', 'mako', 'string']
+    engines = ['jinja2', 'mako', 'cheetah']
 
     def __init__(self, template_str=None):
         self.template_str = template_str
@@ -209,7 +209,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description="Build a nice nfo")
     parser.add_argument('-p', '--properties', action='store_true')
     parser.add_argument('-t', '--template', nargs=1,
-                        help="Select a template file. Supported engines: {}".
+                        help="Select a template file. Supported engines: {}.".
                         format(engines))
     parser.add_argument('-o', '--outfile',
                         help="Output file (default: stdout)")
