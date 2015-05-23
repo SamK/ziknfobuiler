@@ -13,18 +13,18 @@ Create NFO file for music album with Python 2.7 on Linux.
 ### Prerequisites
 
 * Install mediainfo
-*(MediaInfo is used to read the audio files.)*
+*(used to read the audio files.)*
 ```
 sudo apt-get install mediainfo
 ```
 * Install Beautiful Soup 4
-*(Beautiful Soup is a XML parser used to communicate with mediainfo.)*
+*(a XML parser used to communicate with mediainfo)*
 ```
 sudo pip install beautifulsoup4 
 sudo apt-get install python-lxml
 ```
 * Install a template engine
-*(Choose between one of these:)*
+*(choose between one of these:)*
 
   * Cheetah -- `apt-get install python-cheetah`
   * Mako -- `apt-get install python-mako`b
