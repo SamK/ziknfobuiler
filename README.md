@@ -38,7 +38,7 @@ Just download the file or clone the repo, it's up to you.
 
 * Basic example: 
 ```
-./ziknfobuilder "The Musicians - G.O.O.D Music"  --template my_template.mako 
+./ziknfobuilder "The Musicians - G.O.O.D Music"  --template=templates/full.mako
 ```
 * Get the full help
 ```
