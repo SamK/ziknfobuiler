@@ -96,34 +96,6 @@ class Nfo(object):
         pass
 
     def __str__(self):
-        """
-        Performer
-        Album
-        Bit_depth
-        Complete_name
-        Format
-        Format_Info
-        File_size
-        Duration
-        Overall_bit_rate_mode
-        Overall_bit_rate
-        Album
-        Track_name
-        Track_name_Position
-        Performer
-        Genre
-        Recorded_date
-        Format
-        Format_Info
-        Duration
-        Bit_rate_mode
-        Bit_rate
-        Channel_s_
-        Sampling_rate
-        Bit_depth
-        Stream_size
-        Writing_library
-        """
         # Choose the template file
         template_str = __template__
         if self.template:
