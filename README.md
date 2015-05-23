@@ -40,4 +40,7 @@ Just download the file or clone the repo, it's up to you.
 ```
 ./ziknfobuilder "The Musicians - G.O.O.D Music"  --template my_template.mako 
 ```
+## Templates
+
+There is currently no proper template provided. However there are some examples in the `/templates` directory.
 
