@@ -89,7 +89,7 @@ class NfoTemplate(object):
 
 class Nfo(object):
     tracks = []
-    properties = {}
+    properties = {'track_name_maxlen': 0}
     template = None
 
     def __init__(self):
@@ -123,7 +123,7 @@ class Nfo(object):
 
         # Loop over "<File>"
         for tag_file in soup.find_all('File'):
-            track = {}
+            track = {'track_name_len': 0}
 
             # Gather all the properties of the track
             for tag_properties in tag_file.find_all(True):
@@ -151,6 +151,14 @@ class Nfo(object):
                                 format(track['Complete_name']))
                 sys.exit(1)
 
+            # update the "track_name_len" home-made property
+            track['track_name_len'] = len(track['Track_name'])
+
+
+            # update the NFO 'track_name_maxlen' home-made property
+            longest_trackname =  max([ self.properties['track_name_maxlen'], track['track_name_len']])
+            self.properties['track_name_maxlen'] = longest_trackname
+
             # finally, add the track to the list of tracks
             self.tracks.append(track)
 
@@ -163,7 +171,7 @@ class Nfo(object):
             sys.exit(1)
 
         # Assign album properties to album
-        self.properties = self.tracks[0]
+        self.properties.update(self.tracks[0])
 
 
 def _pprint(stuff):
