@@ -10,18 +10,29 @@ Create NFO file for music album with Python 2.7 on Linux.
 
 ## Installation
 
-* Install Beautiful Soup 4
+### Prerequisites
 
+* Install mediainfo
+*MediaInfo is used to read the audio files.*
+```
+sudo apt-get install mediainfo
+```
+* Install Beautiful Soup 4
+*Beautiful Soup is a XML parser used to communicate with mediainfo.*
 ```
 sudo pip install beautifulsoup4 
 sudo apt-get install python-lxml
 ```
+* Install a template engine
+*Choose between one of these:*
 
-* Clone the current repository
+  * Cheetah -- `apt-get install python-cheetah`
+  * Mako -- `apt-get install python-mako`b
+  * Jinja2 -- `apt-get install python-jinja2`
 
-```
-git clone <repository>
-```
+# Install Zik NFO Builder
+
+Just download the file or clone the repo, it's up to you.
 
 ## Usage
 
