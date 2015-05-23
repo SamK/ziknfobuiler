@@ -21,11 +21,14 @@
 ${hline()}
 ${ title | center }
 ${hline()}
-Artist: ${album['Performer']}
-Album:  ${album['Album']}
-Genre:  ${album['Genre']}
-Format: ${album['Format']}
-Date:   ${album['Recorded_date']}
+Artist:   ${album['Performer']}
+Album:    ${album['Album']}
+Genre:    ${album['Genre']}
+Date:     ${album['Recorded_date']}
+Codec:    ${album['Format_Info']} (${album['Format']})
+Ripper:   ${album['Writing_library']}
+Channels: ${album['Channel_s_']} / ${album['Sampling_rate']} / ${album['Bit_depth']}
+Bit rate: ${album['Overall_bit_rate_mode']} (${album['Overall_bit_rate']})
 
 Tracklist:
 ${hline()}
