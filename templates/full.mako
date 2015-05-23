@@ -24,18 +24,18 @@ ${hline()}
 Artist:   ${album['Performer']}
 Album:    ${album['Album']}
 Genre:    ${album['Genre']}
-Date:     ${album['Recorded_date']}
-Codec:    ${album['Format_Info']} (${album['Format']})
-Ripper:   ${album['Writing_library']}
-Channels: ${album['Channel_s_']} / ${album['Sampling_rate']} / ${album['Bit_depth']}
-Bit rate: ${album['Overall_bit_rate_mode']} (${album['Overall_bit_rate']})
+Date:     ${album['Recorded_Date']}
+Codec:    ${album['Audio_Codec_List']} (${album['Format']})
+Ripper:   ${album['Encoded_Library_String']}
+Channels: ${album['Channel_s_']} / ${album['SamplingRate_String']} / ${album['BitDepth']} bit
+Bit rate: ${album['OverallBitRate_Mode_String']}
 
 Tracklist:
 ${hline()}
 % for track in tracklist:
-${ '%2s' % track['Track_name_Position']}. \
-${ track['Track_name'].ljust(album['track_name_maxlen']+3, ' ') }\
-(${track['Duration']})
+${ '%2s' % track['Track_Position']}. \
+${ track['Title'].ljust(album['track_name_maxlen']+3, ' ') }\
+(${track['Duration_String3']})
 % endfor
 ${hline()}
 
