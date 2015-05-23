@@ -141,18 +141,19 @@ class Nfo(object):
                 # the file has no "Audio" property there for not considered as an
                 # audio file: forget the gathering, skip everything and
                 # continue the loop with another file
+
                 logging.info('Skipping not Audio file "{filename}"'.
-                             format(filename=track['Complete_name']))
+                             format(filename=track['CompleteName']))
                 continue
 
             # Exit fatally if important tags are missing
-            if 'Track_name_Position' not in track:
+            if 'Track_Position' not in track:
                 logger.critical('Missing track number for file {0}'.
-                                format(track['Complete_name']))
+                                format(track['CompleteName']))
                 sys.exit(1)
 
             # update the "track_name_len" home-made property
-            track['track_name_len'] = len(track['Track_name'])
+            track['track_name_len'] = len(track['Track'])
 
 
             # update the NFO 'track_name_maxlen' home-made property
@@ -163,7 +164,7 @@ class Nfo(object):
             self.tracks.append(track)
 
         # sort tracks
-        self.tracks.sort(key=lambda k: int(k['Track_name_Position']))
+        self.tracks.sort(key=lambda k: int(k['Track_Position']))
 
         # sanity check
         if len(self.tracks) == 0:
