@@ -30,7 +30,7 @@ sudo apt-get install python-lxml
   * Mako -- `apt-get install python-mako`b
   * Jinja2 -- `apt-get install python-jinja2`
 
-# Install Zik NFO Builder
+### Install Zik NFO Builder
 
 Just download the file or clone the repo, it's up to you.
 
