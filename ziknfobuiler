@@ -223,8 +223,6 @@ def parse_arguments():
                         format(engines))
     parser.add_argument('-o', '--outfile',
                         help="Output file (default: stdout)")
-    parser.add_argument('-f', '--formats', nargs='*',
-                        help='Support additional formats')
     parser.add_argument('-V', '--version', action='version',
                         help="shows program version", version=version_string)
     parser.add_argument('-v', '--verbose', action='count', default=0)
@@ -255,9 +253,6 @@ def main():
                                        "--output=XML",
                                        args.folder])
     nfo = Nfo()
-
-    if args.formats:
-        nfo.formats += args.formats
 
     if args.template:
         # User has a custom template
