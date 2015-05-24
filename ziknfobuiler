@@ -86,13 +86,25 @@ class NfoTemplate(object):
                                 template rendering...")
                 raise
 
+class Album(object):
+    title = '?'
+    song_title_maxlen = 0
+    ripper = '?'
+    def __init__(self):
+        pass
+
+class Song(object):
+    title_len = 0
+    def __init__(self):
+        pass
+
 
 class Nfo(object):
-    tracks = []
-    properties = {'track_name_maxlen': 0, 'ripper': None}
+    tracklist = []
     template = None
 
     def __init__(self):
+        self.album = Album()
         pass
 
     def __str__(self):
@@ -111,9 +123,23 @@ class Nfo(object):
 
         # render template and return result
         return template.render(
-            tracklist=self.tracks,
-            album=self.properties
-            )
+            tracklist=self.tracklist,
+            album=self.album)
+
+    def apply_attributes(self):
+        # get data from first track
+        t = self.tracklist[0]
+        self.album.Artist = t.Performer
+        self.album.Title = t.Title
+        self.album.Genre = t.Genre
+        self.album.Format = t.Format
+        self.album.Recorded_Date = t.Recorded_Date
+
+        # Add 'ripper' key
+        try:
+            self.album.ripper = t.Encoded_Library_String
+        except:
+            self.album.ripper = t.EncodedBy
 
     def load_template(self, template_str):
         self.template = template_str
@@ -123,11 +149,13 @@ class Nfo(object):
 
         # Loop over "<File>"
         for tag_file in soup.find_all('File'):
-            track = {'track_name_len': 0}
+
+            mediafile = Song()
 
             # Gather all the properties of the track
             for tag_properties in tag_file.find_all(True):
-                track[tag_properties.name] = tag_properties.contents[0]
+                #track[tag_properties.name] = tag_properties.contents[0]
+                setattr(mediafile, tag_properties.name, tag_properties.contents[0])
 
             # <File> must contain <track type="Audio">
             # otherwise, skip it
@@ -141,43 +169,37 @@ class Nfo(object):
                 # the file has no "Audio" property there for not considered as an
                 # audio file: forget the gathering, skip everything and
                 # continue the loop with another file
-
                 logging.info('Skipping not Audio file "{filename}"'.
-                             format(filename=track['CompleteName']))
+                             format(filename=mediafile.CompleteName))
                 continue
 
-            # Exit fatally if important tags are missing
-            if 'Track_Position' not in track:
+            try:
+                dummy = mediafile.Track_Position
+            except AttributeError:
                 logger.critical('Missing track number for file {0}'.
-                                format(track['CompleteName']))
+                                format(mediafile.CompleteName))
                 sys.exit(1)
 
-            # Add 'ripper' key
-            if 'Encoded_Library_String' in track:
-                track['ripper'] = track['Encoded_Library_String']
-            elif 'EncodedBy' in track:
-                track['ripper'] = track['EncodedBy']
             # update the "track_name_len" home-made property
-            track['track_name_len'] = len(track['Track'])
+            mediafile.title_len = len(mediafile.Track)
 
-
-            # update the NFO 'track_name_maxlen' home-made property
-            longest_trackname =  max([ self.properties['track_name_maxlen'], track['track_name_len']])
-            self.properties['track_name_maxlen'] = longest_trackname
+            # update the NFO 'track_title_maxlen' home-made property
+            longest_trackname =   max(self.album.song_title_maxlen, mediafile.title_len)
+            self.album.track_title_maxlen = longest_trackname
 
             # finally, add the track to the list of tracks
-            self.tracks.append(track)
+            self.tracklist.append(mediafile)
 
         # sort tracks
-        self.tracks.sort(key=lambda k: int(k['Track_Position']))
+        self.tracklist.sort(key=lambda k: int(k.Track_Position))
 
         # sanity check
-        if len(self.tracks) == 0:
+        if len(self.tracklist) == 0:
             logging.critical('No media file found!')
             sys.exit(1)
 
         # Assign album properties to album
-        self.properties.update(self.tracks[0])
+        self.apply_attributes()
 
 
 def _pprint(stuff):
