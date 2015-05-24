@@ -194,7 +194,7 @@ def parse_arguments():
 
     parser = argparse.ArgumentParser(description="Build a nice nfo")
     parser.add_argument('-p', '--properties', action='store_true')
-    parser.add_argument('folder', help='the music directory (or files)')
+    parser.add_argument('music', help='the music directory (or files)')
     parser.add_argument('template',
                         help="Select a template file. Supported engines: {}.".
                         format(engines))
@@ -220,21 +220,21 @@ def main():
 
     logger.debug('Enabling debug mode.')
 
-    # Exit if args.folder does not exist
-    if not os.path.exists(args.folder):
-        logger.critical('No such file or directory: "{}"'.format(args.folder))
+    # Exit if args.music does not exist
+    if not os.path.exists(args.music):
+        logger.critical('No such file or directory: "{}"'.format(args.music))
         sys.exit(1)
 
     # If user provided a folder (not a file), it must not be empty
-    if os.path.isdir(args.folder) and not os.listdir(args.folder):
-        logger.critical("Provided folder is empty.")
+    if os.path.isdir(args.music) and not os.listdir(args.music):
+        logger.critical("Provided music folder is empty.")
         sys.exit(1)
 
     xmldata = subprocess.check_output(["mediainfo",
                                        "--output=XML",
                                        "--Full",
                                        "--Language=raw",
-                                       args.folder])
+                                       args.music])
     nfo = Nfo()
 
     if args.template:
