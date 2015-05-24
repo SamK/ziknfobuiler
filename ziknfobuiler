@@ -88,8 +88,11 @@ class NfoTemplate(object):
 
 class Album(object):
     title = '?'
-    song_title_maxlen = 0
+    track_title_maxlen = 0
     ripper = '?'
+    Audio_Codec_List = 'toto'
+    OverallBitRate_Mode_String = 'none'
+    channels = ''
     def __init__(self):
         pass
     def __getitem__(self, item):
@@ -135,7 +138,9 @@ class Nfo(object):
         # get data from first track
         t = self.tracklist[0]
         self.album.Artist = t.Performer
+        self.album.Performer = t.Performer
         self.album.Title = t.Title
+        self.album.Album = t.Title
         self.album.Genre = t.Genre
         self.album.Format = t.Format
         self.album.Recorded_Date = t.Recorded_Date
@@ -189,7 +194,7 @@ class Nfo(object):
             mediafile.title_len = len(mediafile.Track)
 
             # update the NFO 'track_title_maxlen' home-made property
-            longest_trackname =   max(self.album.song_title_maxlen, mediafile.title_len)
+            longest_trackname =   max(self.album.track_title_maxlen, mediafile.title_len)
             self.album.track_title_maxlen = longest_trackname
 
             # finally, add the track to the list of tracks
