@@ -12,8 +12,19 @@
 ## http://docs.makotemplates.org/en/latest/filtering.html
 ##
 <%!
-    def center(word):
-        return str.center(str(word), 60, ' ')
+# Use center() to center strings
+def center(word):
+    return str.center(str(word), 60, ' ')
+
+def channels(album):
+    result = []
+    if 'Channel_s_' in album:
+        result.append('{} channels'.format(album['Channel_s_']))
+    if 'BSamplingRate_String' in album:
+        result.append('{}'.format(album['SamplingRate_String']))
+    if 'BitDepth' in album:
+        result.append('{} bits'.format(album['BitDepth']))
+    return ' / '.join(result)
 %>\
 ##
 ## THE template
@@ -26,8 +37,8 @@ Album:    ${album['Album']}
 Genre:    ${album['Genre']}
 Date:     ${album['Recorded_Date']}
 Codec:    ${album['Audio_Codec_List']} (${album['Format']})
-Ripper:   ${album['Encoded_Library_String']}
-Channels: ${album['Channel_s_']} / ${album['SamplingRate_String']} / ${album['BitDepth']} bit
+Ripper:   ${album['ripper']}
+Channels: ${channels(album)}
 Bit rate: ${album['OverallBitRate_Mode_String']}
 
 Tracklist:
