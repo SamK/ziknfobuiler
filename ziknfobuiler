@@ -267,7 +267,14 @@ def main():
 
     if args.properties:
         # User just wants to print properties
-        for key, value in nfo.properties.iteritems():
+        print "Album properties:"
+        print "-----------------"
+        for key in nfo.album.__dict__.keys():
+            print key
+        print
+        print "Tracks properties:"
+        print "------------------"
+        for key in nfo.tracklist[0].__dict__.keys():
             print key
     else:
         if args.outfile:
