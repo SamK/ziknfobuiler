@@ -94,8 +94,8 @@ class Album(object):
     OverallBitRate_Mode_String = 'none'
     channels = ''
     def __init__(self):
-        pass
-    def __getitem__(self, item):
+
+   def __getitem__(self, item):
         return getattr(self, item)
 
 class Song(object):
@@ -139,11 +139,21 @@ class Nfo(object):
         t = self.tracklist[0]
         self.album.Artist = t.Performer
         self.album.Performer = t.Performer
-        self.album.Title = t.Title
-        self.album.Album = t.Title
+        self.album.Album = t.Album
+        self.album.title = t.Album
         self.album.Genre = t.Genre
         self.album.Format = t.Format
         self.album.Recorded_Date = t.Recorded_Date
+
+
+        chans = []
+        if 'Channel_s_' in self.album:
+            chans.append('{} channels'.format(album['Channel_s_']))
+        if 'BSamplingRate_String' in self.album:
+            chans.append('{}'.format(album['SamplingRate_String']))
+        if 'BitDepth' in self.album:
+            chans.append('{} bits'.format(album['BitDepth']))
+        self.channels = ' / '.join(result)
 
         # Add 'ripper' key
         try:
