@@ -89,7 +89,7 @@ class NfoTemplate(object):
 
 class Nfo(object):
     tracks = []
-    properties = {'track_name_maxlen': 0}
+    properties = {'track_name_maxlen': 0, 'ripper': None}
     template = None
 
     def __init__(self):
@@ -152,6 +152,11 @@ class Nfo(object):
                                 format(track['CompleteName']))
                 sys.exit(1)
 
+            # Add 'ripper' key
+            if 'Encoded_Library_String' in track:
+                track['ripper'] = track['Encoded_Library_String']
+            elif 'EncodedBy' in track:
+                track['ripper'] = track['EncodedBy']
             # update the "track_name_len" home-made property
             track['track_name_len'] = len(track['Track'])
 
