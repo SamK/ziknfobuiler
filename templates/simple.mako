@@ -1,4 +1,4 @@
-${album['Performer']} - ${album['Album']}
+${album.Artist} - ${album.title}
 
 ===
 Artist: ${album['Performer']}

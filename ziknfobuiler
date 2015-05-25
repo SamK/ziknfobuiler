@@ -90,7 +90,7 @@ class Album(object):
     title = '?'
     track_title_maxlen = '0'
     ripper = '?'
-    Audio_Codec_List = 'toto'
+    Audio_Codec_List = 'unknown'
     OverallBitRate_Mode_String = 'none'
     channels = ''
     def __init__(self):
@@ -100,7 +100,7 @@ class Album(object):
         return getattr(self, item)
 
 class Song(object):
-    title_len = 0
+    title_len = '0'
     def __init__(self):
         pass
     def __getitem__(self, item):
@@ -146,21 +146,20 @@ class Nfo(object):
         self.album.Format = t.Format
         self.album.Recorded_Date = t.Recorded_Date
 
-
         chans = []
         try:
-            chans.append('{} channels'.format(album['Channel_s_']))
+            chans.append('{} channels'.format(t['Channel_s_']))
         except:
             pass
         try:
-            chans.append('{}'.format(album['SamplingRate_String']))
+            chans.append('{}'.format(t['SamplingRate_String']))
         except:
             pass
         try:
-            chans.append('{} bits'.format(album['BitDepth']))
+            chans.append('{} bits'.format(t['BitDepth']))
         except:
             pass
-        self.channels = ' / '.join(chans)
+        self.album.channels = ' / '.join(chans)
 
         # Add 'ripper' key
         try:
@@ -208,10 +207,11 @@ class Nfo(object):
                 sys.exit(1)
 
             # update the "track_name_len" home-made property
-            mediafile.title_len = len(mediafile.Track)
+            mediafile.title_len = str(len(mediafile.Track))
 
             # update the NFO 'track_title_maxlen' home-made property
-            longest_trackname =   max(self.album.track_title_maxlen, mediafile.title_len)
+            longest_trackname =   str(max(int(self.album.track_title_maxlen), int(mediafile.title_len)))
+
             self.album.track_title_maxlen = longest_trackname
 
             # finally, add the track to the list of tracks
