@@ -11,21 +11,6 @@ import sys
 __version__ = '1.1.0'
 __author__ = 'SamK'
 
-__template_engine__ = 'jinja2'
-__template__ = '''{{album.Performer}} - {{album.Album}}
-===
-Artist: {{album.Performer}}
-Album:  {{album.Album}}
-Genre:  {{album.Genre}}
-Date:   {{album.Recorded_Date}}
-
-Tracklist:
-{% for track in tracklist -%}
-{{ '%2s' % track.Track_Position }}. {{ track.Title
-}} ({{ track.Duration_String3 }})
-{% endfor -%}
-'''
-
 logger = logging.getLogger()
 log_console = logging.StreamHandler()
 logger.setLevel(logging.DEBUG)
@@ -35,7 +20,6 @@ logger.addHandler(log_console)
 
 
 class NfoTemplate(object):
-    template_engine = __template_engine__
     template = None
     engines = ['jinja2', 'mako', 'cheetah']
 
@@ -118,7 +102,6 @@ class Nfo(object):
 
     def __str__(self):
         # Choose the template file
-        template_str = __template__
         if self.template:
             # User specified a specific template
             txt = open(self.template)
@@ -285,11 +268,7 @@ def main():
                                        "--Language=raw",
                                        args.music])
     nfo = Nfo()
-
-    if args.template:
-        # User has a custom template
-        nfo.load_template(args.template)
-
+    nfo.load_template(args.template)
     nfo.parse(xmldata)
 
     if args.properties:
