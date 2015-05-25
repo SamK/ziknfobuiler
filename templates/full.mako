@@ -2,7 +2,9 @@
 ## Variables
 ##
 <% pagewidth = 60 %>\
-<% title = album['Performer'] + ' - ' + album['Album'] %>\
+<% 
+title = album['Performer'] + ' - ' + album['title'] 
+%>\
 ##
 ## Functions
 ##
@@ -15,16 +17,6 @@
 # Use center() to center strings
 def center(word):
     return str.center(str(word), 60, ' ')
-
-def channels(album):
-    result = []
-    if 'Channel_s_' in album:
-        result.append('{} channels'.format(album['Channel_s_']))
-    if 'BSamplingRate_String' in album:
-        result.append('{}'.format(album['SamplingRate_String']))
-    if 'BitDepth' in album:
-        result.append('{} bits'.format(album['BitDepth']))
-    return ' / '.join(result)
 %>\
 ##
 ## THE template
@@ -38,15 +30,15 @@ Genre:    ${album['Genre']}
 Date:     ${album['Recorded_Date']}
 Codec:    ${album['Audio_Codec_List']} (${album['Format']})
 Ripper:   ${album['ripper']}
-Channels: ${channels(album)}
-Bit rate: ${album['OverallBitRate_Mode_String']}
+Channels: ${album['channels']}
 
 Tracklist:
 ${hline()}
 % for track in tracklist:
 ${ '%2s' % track['Track_Position']}. \
-${ track['Title'].ljust(album['track_name_maxlen']+3, ' ') }\
-(${track['Duration_String3']})
+${ track['Title'].ljust(int(album['track_title_maxlen'])+3, ' ') }\
+${track['Duration_String3']}
+## ${ track['Title'] }
 % endfor
 ${hline()}
 
