@@ -27,7 +27,7 @@ sudo apt-get install python-lxml
 *(choose between one of these:)*
 
   * Cheetah -- `apt-get install python-cheetah`
-  * Mako -- `apt-get install python-mako`b
+  * Mako -- `apt-get install python-mako`
   * Jinja2 -- `apt-get install python-jinja2`
 
 ### Install Zik NFO Builder
