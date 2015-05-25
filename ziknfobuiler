@@ -88,14 +88,15 @@ class NfoTemplate(object):
 
 class Album(object):
     title = '?'
-    track_title_maxlen = 0
+    track_title_maxlen = '0'
     ripper = '?'
     Audio_Codec_List = 'toto'
     OverallBitRate_Mode_String = 'none'
     channels = ''
     def __init__(self):
+        pass
 
-   def __getitem__(self, item):
+    def __getitem__(self, item):
         return getattr(self, item)
 
 class Song(object):
@@ -147,13 +148,19 @@ class Nfo(object):
 
 
         chans = []
-        if 'Channel_s_' in self.album:
+        try:
             chans.append('{} channels'.format(album['Channel_s_']))
-        if 'BSamplingRate_String' in self.album:
+        except:
+            pass
+        try:
             chans.append('{}'.format(album['SamplingRate_String']))
-        if 'BitDepth' in self.album:
+        except:
+            pass
+        try:
             chans.append('{} bits'.format(album['BitDepth']))
-        self.channels = ' / '.join(result)
+        except:
+            pass
+        self.channels = ' / '.join(chans)
 
         # Add 'ripper' key
         try:
