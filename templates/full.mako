@@ -31,7 +31,6 @@ Date:     ${album['Recorded_Date']}
 Codec:    ${album['Audio_Codec_List']} (${album['Format']})
 Ripper:   ${album['ripper']}
 Channels: ${album['channels']}
-Bit rate: ${album['OverallBitRate_Mode_String']}
 
 Tracklist:
 ${hline()}
