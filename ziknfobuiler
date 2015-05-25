@@ -129,6 +129,7 @@ class Nfo(object):
         self.album.Format = t.Format
         self.album.Recorded_Date = t.Recorded_Date
 
+        # channels
         chans = []
         try:
             chans.append('{} channels'.format(t['Channel_s_']))
@@ -144,11 +145,45 @@ class Nfo(object):
             pass
         self.album.channels = ' / '.join(chans)
 
-        # Add 'ripper' key
+        # ripper
         try:
             self.album.ripper = t.Encoded_Library_String
         except:
             self.album.ripper = t.EncodedBy
+
+        # codec
+        _codec = []
+        try:
+            _codec.append(t['Format_Commercial'])
+        except:
+            pass
+
+        # Good
+        try:
+            _codec.append('({})'.format(t['Codec_Info']))
+        except:
+            _codec.append('({})'.format(t['Codec_String']))
+            pass
+
+
+
+        """
+        try:
+            _codec.append('({})'.format(t['Format']))
+        except:
+            pass
+
+        try:
+            _codec.append(t['Format_Info'])
+        except:
+            pass
+        """
+        self.album.codec = ' '.join(_codec)
+
+
+
+
+
 
     def load_template(self, template_str):
         self.template = template_str

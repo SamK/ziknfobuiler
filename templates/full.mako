@@ -28,7 +28,7 @@ Artist:   ${album['Performer']}
 Album:    ${album['Album']}
 Genre:    ${album['Genre']}
 Date:     ${album['Recorded_Date']}
-Codec:    ${album['Audio_Codec_List']} (${album['Format']})
+Codec:    ${album['codec']}
 Ripper:   ${album['ripper']}
 Channels: ${album['channels']}
 
