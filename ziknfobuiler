@@ -152,38 +152,18 @@ class Nfo(object):
             self.album.ripper = t.EncodedBy
 
         # codec
-        _codec = []
-        try:
-            _codec.append(t['Format_Commercial'])
-        except:
-            pass
+        codecs = []
+        codec_fields = ['Format_Commercial', 'Codec_Info', 'Codec_String',
+                        'Audio_Codec_List', 'Format', 'Format_Info']
 
-        # Good
-        try:
-            _codec.append('({})'.format(t['Codec_Info']))
-        except:
-            _codec.append('({})'.format(t['Codec_String']))
-            pass
+        for codec_field in codec_fields:
+            if codec_field in dir(t):
+                codecs.append('({})'.format(t[codec_field]))
 
-
-
-        """
-        try:
-            _codec.append('({})'.format(t['Format']))
-        except:
-            pass
-
-        try:
-            _codec.append(t['Format_Info'])
-        except:
-            pass
-        """
-        self.album.codec = ' '.join(_codec)
-
-
-
-
-
+        if codecs:
+            self.album.codec = ' '.join(codecs)
+        else:
+            self.album.codec = None
 
     def load_template(self, template_str):
         self.template = template_str
