@@ -184,6 +184,8 @@ class Nfo(object):
                 #track[tag_properties.name] = tag_properties.contents[0]
                 setattr(mediafile, tag_properties.name, tag_properties.contents[0])
 
+            logging.info(u'Parsing "{}"'.format(mediafile.CompleteName))
+
             # <File> must contain <track type="Audio">
             # otherwise, skip it
             tag_file.find_all('track')
