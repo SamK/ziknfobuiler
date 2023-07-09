@@ -281,7 +281,7 @@ def main():
         sys.exit(1)
 
     xmldata = subprocess.check_output(["mediainfo",
-                                       "--output=XML",
+                                       "--output=OLDXML",
                                        "--Full",
                                        "--Language=raw",
                                        args.music])
