@@ -113,10 +113,13 @@ class Nfo(object):
         logger.debug("Using template engine {}".
                      format(template.template_engine))
 
-        # render template and return result
-        return template.render(
+        # render template
+        rendered = template.render(
             tracklist=self.tracklist,
             album=self.album)
+
+        # and return result
+        return rendered.encode('utf-8')
 
     def apply_attributes(self):
         # get data from first track
@@ -152,38 +155,18 @@ class Nfo(object):
             self.album.ripper = t.EncodedBy
 
         # codec
-        _codec = []
-        try:
-            _codec.append(t['Format_Commercial'])
-        except:
-            pass
+        codecs = []
+        codec_fields = ['Format_Commercial', 'Codec_Info', 'Codec_String',
+                        'Audio_Codec_List', 'Format', 'Format_Info']
 
-        # Good
-        try:
-            _codec.append('({})'.format(t['Codec_Info']))
-        except:
-            _codec.append('({})'.format(t['Codec_String']))
-            pass
+        for codec_field in codec_fields:
+            if codec_field in dir(t):
+                codecs.append('({})'.format(t[codec_field]))
 
-
-
-        """
-        try:
-            _codec.append('({})'.format(t['Format']))
-        except:
-            pass
-
-        try:
-            _codec.append(t['Format_Info'])
-        except:
-            pass
-        """
-        self.album.codec = ' '.join(_codec)
-
-
-
-
-
+        if codecs:
+            self.album.codec = ' '.join(codecs)
+        else:
+            self.album.codec = None
 
     def load_template(self, template_str):
         self.template = template_str
@@ -200,6 +183,8 @@ class Nfo(object):
             for tag_properties in tag_file.find_all(True):
                 #track[tag_properties.name] = tag_properties.contents[0]
                 setattr(mediafile, tag_properties.name, tag_properties.contents[0])
+
+            logging.info(u'Parsing "{}"'.format(mediafile.CompleteName))
 
             # <File> must contain <track type="Audio">
             # otherwise, skip it
@@ -298,7 +283,7 @@ def main():
         sys.exit(1)
 
     xmldata = subprocess.check_output(["mediainfo",
-                                       "--output=XML",
+                                       "--output=OLDXML",
                                        "--Full",
                                        "--Language=raw",
                                        args.music])
