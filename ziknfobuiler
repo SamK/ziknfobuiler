@@ -113,10 +113,13 @@ class Nfo(object):
         logger.debug("Using template engine {}".
                      format(template.template_engine))
 
-        # render template and return result
-        return template.render(
+        # render template
+        rendered = template.render(
             tracklist=self.tracklist,
             album=self.album)
+
+        # and return result
+        return rendered.encode('utf-8')
 
     def apply_attributes(self):
         # get data from first track
