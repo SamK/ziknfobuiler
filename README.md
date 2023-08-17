@@ -1,6 +1,6 @@
 # Zik NFO Builder
 
-Create NFO file for music album with Python 2.7 on Linux.
+Create NFO file for music album with Python 3.
 
 * this program is one file
 * supports the following template engines:
@@ -8,35 +8,31 @@ Create NFO file for music album with Python 2.7 on Linux.
   * Mako
   * Jinja2
 
+
+## Requirements
+
+* Python 3
+* The mediainfo package
+*(used to read the audio files.)*:
+`sudo apt-get install mediainfo`
+
 ## Installation
 
-### Prerequisites
-
-* Install mediainfo
-*(used to read the audio files.)*
+* Create a virtual environment somewhere and activate it
 ```
-sudo apt-get install mediainfo
+python3 -m venv ~/path/to/my/venv
+. ~/path/to/my/venv/bin/activate
 ```
-* Install Beautiful Soup 4
-*(a XML parser used to communicate with mediainfo)*
+
+* Clone or download this repo
+* Install the requirements
 ```
-sudo pip install beautifulsoup4 
-sudo apt-get install python-lxml
+pip install -r requirements.txt
 ```
-* Install a template engine
-*(choose between one of these:)*
-
-  * Cheetah -- `apt-get install python-cheetah`
-  * Mako -- `apt-get install python-mako`
-  * Jinja2 -- `apt-get install python-jinja2`
-
-### Install Zik NFO Builder
-
-Just download the file or clone the repo, it's up to you.
 
 ## Usage
 
-* Basic example: 
+* Basic example:
 ```
 ./ziknfobuilder "The Musicians - G.O.O.D Music" templates/full.mako
 ```

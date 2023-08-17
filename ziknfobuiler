@@ -119,7 +119,7 @@ class Nfo(object):
             album=self.album)
 
         # and return result
-        return rendered.encode('utf-8')
+        return rendered
 
     def apply_attributes(self):
         # get data from first track
@@ -184,7 +184,7 @@ class Nfo(object):
                 #track[tag_properties.name] = tag_properties.contents[0]
                 setattr(mediafile, tag_properties.name, tag_properties.contents[0])
 
-            logging.info(u'Parsing "{}"'.format(mediafile.CompleteName))
+            logging.info('Parsing "{}"'.format(mediafile.CompleteName))
 
             # <File> must contain <track type="Audio">
             # otherwise, skip it
@@ -293,15 +293,15 @@ def main():
 
     if args.properties:
         # User just wants to print properties
-        print "Album properties:"
-        print "-----------------"
-        for key in nfo.album.__dict__.keys():
-            print key
-        print
-        print "Tracks properties:"
-        print "------------------"
-        for key in nfo.tracklist[0].__dict__.keys():
-            print key
+        print("Album properties:")
+        print("-----------------")
+        for key in list(nfo.album.__dict__.keys()):
+            print(key)
+        print()
+        print("Tracks properties:")
+        print("------------------")
+        for key in list(nfo.tracklist[0].__dict__.keys()):
+            print(key)
     else:
         if args.outfile:
             f = open(args.outfile, 'w')
