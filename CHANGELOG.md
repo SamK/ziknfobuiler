@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+* Update to Python 3
+
 ## 1.2.0
 
 ### Changed
